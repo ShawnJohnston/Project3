@@ -18,6 +18,8 @@ class Cat {
 	string breed = "";
 	string photo = "";
 
+	bool accessed = false;
+
 public:
 	Cat() {}
 	Cat(int& order, int& id, string& age, string& gender, string& size, string& coat, string& breed, string& photo) {
