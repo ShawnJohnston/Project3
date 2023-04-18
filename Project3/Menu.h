@@ -3,6 +3,7 @@
 #include "Graph.h"
 
 class Menu {
+	Graph graph;
 	string csvLocation = "";
 
 	void mainMenu();
@@ -11,7 +12,6 @@ class Menu {
 	void completionMenu(bool& searching);
 
 	void fileInput();
-	void compileGraph();
 	void saveToFile();
 public:
 	Menu() {
