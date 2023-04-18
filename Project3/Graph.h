@@ -60,16 +60,17 @@ public:
 	void insertCat(Cat*& cat);
 };
 
-//void Graph::insertCategory(string& category) {
-//	categoryCount += 1;
-//	categories.emplace(categoryCount, category);
-//}
-//void Graph::insertCat(Cat*& cat) {
-//	this->catCount += 1;
-//	this->cats.emplace(catCount, cat);
-//
-//	categorizeInsertedCat(cat);
-//}
-//void Graph::categorizeInsertedCat(Cat*& cat) {
-//
-//}
+void Graph::insertCategory(string& category) {
+	categoryCount += 1;
+	Category* categoryObj = new Category();
+	categories.emplace(categoryCount, categoryObj);
+}
+void Graph::insertCat(Cat*& cat) {
+	this->catCount += 1;
+	this->cats.emplace(catCount, cat);
+
+	categorizeInsertedCat(cat);
+}
+void Graph::categorizeInsertedCat(Cat*& cat) {
+
+}
