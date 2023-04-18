@@ -47,29 +47,29 @@ public:
 };
 
 
-class Graph {
-	map<int, Cat*> cats;
-	map<string, Category*> categories;
-	int catCount = 0;
-	int categoryCount = 0;
-
-	void categorizeInsertedCat(Cat*& cat);
-public:
-	Graph() {};
-	void insertCategory(string& category);
-	void insertCat(Cat*& cat);
-};
-
-void Graph::insertCategory(string& category) {
-	categoryCount += 1;
-	categories.emplace(categoryCount, category);
-}
-void Graph::insertCat(Cat*& cat) {
-	this->catCount += 1;
-	this->cats.emplace(catCount, cat);
-
-	categorizeInsertedCat(cat);
-}
-void Graph::categorizeInsertedCat(Cat*& cat) {
-
-}
+//class Graph {
+//	map<int, Cat*> cats;
+//	map<string, Category*> categories;
+//	int catCount = 0;
+//	int categoryCount = 0;
+//
+//	void categorizeInsertedCat(Cat*& cat);
+//public:
+//	Graph() {};
+//	void insertCategory(string& category);
+//	void insertCat(Cat*& cat);
+//};
+//
+//void Graph::insertCategory(string& category) {
+//	categoryCount += 1;
+//	categories.emplace(categoryCount, category);
+//}
+//void Graph::insertCat(Cat*& cat) {
+//	this->catCount += 1;
+//	this->cats.emplace(catCount, cat);
+//
+//	categorizeInsertedCat(cat);
+//}
+//void Graph::categorizeInsertedCat(Cat*& cat) {
+//
+//}
