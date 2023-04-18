@@ -3,12 +3,14 @@
 #include "Graph.h"
 
 class Menu {
+	string csvLocation = "";
 
 	void mainMenu();
 	void searchMenu();
 	void dataMenu();
 	void completionMenu(bool& searching);
 
+	void fileInput();
 	void compileGraph();
 	void saveToFile();
 public:
@@ -57,10 +59,10 @@ void Menu::dataMenu() {
 		cin >> input;
 
 		if (input == "1") {
-
+			//	Set csvLocation to 'cats.csv' in Resources folder.
 		}
 		else if (input == "2") {
-
+			//	Set csvLocation to some other csv file.
 		}
 		else if (input == "3") {
 			break;
