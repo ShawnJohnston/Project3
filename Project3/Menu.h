@@ -9,6 +9,7 @@ class Menu {
 	Graph* graph;
 	string csvLocation = "cats.csv";
 	set<string> uniqueBreeds;
+	vector<Cat*> searchResults;
 
 	void mainMenu();
 	void searchMenu();
@@ -16,7 +17,7 @@ class Menu {
 	void completionMenu(bool& searching);
 	 
 	void processFileInput();
-	void search(string& critera, string& subcriteria);
+	void search(string& critera, string& subriteria);
 	void saveToFile();
 public:
 	Menu() {
@@ -247,10 +248,7 @@ void Menu::searchMenu() {
 		}
 	}
 
-
-	//	Search Function
 	search(criteria, subcriteria);
-
 
 	bool searching = true;
 	while (searching) {
@@ -363,8 +361,8 @@ void Menu::processFileInput() {
 	}
 	file.close();
 }
-void Menu::search(string& criteria, string& subcriteria) {
-
+void Menu::search(string& criteria, string& subCriteria) {
+	searchResults = graph->getCategories()[criteria]->getSubCategories()[subCriteria];
 }
 void Menu::saveToFile() {
 

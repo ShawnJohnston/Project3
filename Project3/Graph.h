@@ -89,7 +89,6 @@ public:
 
 
 class Graph {
-	//map<int, Cat*> cats;
 	set<string> uniqueBreeds;
 	map<string, Category*> categories;
 	int catCount = 0;
@@ -97,15 +96,18 @@ class Graph {
 
 public:
 	Graph() {};
+	map<string, Category*>& getCategories();
 	void insertCategory(string category);
 	void insertCat(Cat*& cat);
 	void addToBreedList(string& breed);
 };
-
+map<string, Category*>& Graph::getCategories() {
+	return this->categories;
+}
 void Graph::insertCategory(string category) {
 	categoryCount += 1;
-	Category* categoryObj = new Category();
-	categories.emplace(category, categoryObj);
+	Category* categoryContainer = new Category();
+	categories.emplace(category, categoryContainer);
 }
 void Graph::addToBreedList(string& breed) {
 	this->uniqueBreeds.insert(breed);
