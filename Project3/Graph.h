@@ -2,13 +2,12 @@
 
 #include <string>
 #include <map>
+#include <Set>
 #include <vector>
 
 using namespace std;
 
 class Cat {
-	// order,id,url,type,age,gender,size,coat,breed,photos,med_photos
-
 	int order = -1;
 	int id = -1;
 	string age = "";
@@ -36,36 +35,76 @@ public:
 
 class Category {
 	string category;
+	set<string> uniqueBreeds;
+	map<string, vector<Cat*>> subCategories;
 	vector<Cat*> cats;
 
 public:
 	Category() {};
 	Category(string& category) {
 		this->category = category;
+
+		vector<Cat*> v;
+		vector<Cat*> v1;
+		vector<Cat*> v2;
+		vector<Cat*> v3;
+		if (this->category == "age") {
+			subCategories.emplace("Baby", v);
+			subCategories.emplace("Young", v1);
+			subCategories.emplace("Adult", v2);
+			subCategories.emplace("Senior", v3);
+		}
+		else if (this->category == "gender") {
+			subCategories.emplace("Male", v);
+			subCategories.emplace("Female", v1);
+		}
+		else if (this->category == "size") {
+			subCategories.emplace("Small", v);
+			subCategories.emplace("Medium", v1);
+			subCategories.emplace("Large", v2);
+			subCategories.emplace("Extra Large", v3);
+		}
+		else if (this->category == "coat") {
+			subCategories.emplace("Short", v);
+			subCategories.emplace("Medium", v1);
+			subCategories.emplace("Long", v2);
+		}
+		else if (this->category == "breed") {
+			set<string>::iterator iter = uniqueBreeds.begin();
+			for (iter; iter != uniqueBreeds.end(); iter++) {
+				vector<Cat*> v4;
+				subCategories.emplace(*iter, v4);
+			}
+		}
+
 	}
 	void insertCat(Cat*& cat) {
 		cats.push_back(cat);
+	}
+	void importBreedList(set<string>& breeds) {
+		this->uniqueBreeds = breeds;
 	}
 };
 
 
 class Graph {
 	map<int, Cat*> cats;
-	map<int, Category*> categories;
+	map<string, Category*> categories;
 	int catCount = 0;
 	int categoryCount = 0;
 
 	void categorizeInsertedCat(Cat*& cat);
 public:
 	Graph() {};
-	void insertCategory(string& category);
+	void insertCategory(string category, set<string>& uniqueBreeds);
 	void insertCat(Cat*& cat);
 };
 
-void Graph::insertCategory(string& category) {
+void Graph::insertCategory(string category, set<string>& uniqueBreeds) {
 	categoryCount += 1;
 	Category* categoryObj = new Category();
-	categories.emplace(categoryCount, categoryObj);
+	categoryObj->importBreedList(uniqueBreeds);
+	categories.emplace(category, categoryObj);
 }
 void Graph::insertCat(Cat*& cat) {
 	this->catCount += 1;

@@ -131,6 +131,7 @@
     <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="asdf.csv" />
     <None Include="cats.csv" />
   </ItemGroup>
   <ItemGroup>
