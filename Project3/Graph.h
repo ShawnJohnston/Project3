@@ -31,87 +31,109 @@ public:
 		this->breed = breed;
 		this->photo = photo;
 	}
+	int& getOrder() {
+		return this->order;
+	}
+	int& getId() {
+		return this->id;
+	}
+	string& getAge() {
+		return this->age;
+	}
+	string& getGender() {
+		return this->gender;
+	}
+	string& getSize() {
+		return this->size;
+	}
+	string& getCoat() {
+		return this->coat;
+	}
+	string& getBreed() {
+		return this->breed;
+	}
 };
 
 class Category {
 	string category;
-	set<string> uniqueBreeds;
 	map<string, vector<Cat*>> subCategories;
-	vector<Cat*> cats;
 
 public:
 	Category() {};
 	Category(string& category) {
 		this->category = category;
-
-		vector<Cat*> v;
-		vector<Cat*> v1;
-		vector<Cat*> v2;
-		vector<Cat*> v3;
-		if (this->category == "age") {
-			subCategories.emplace("Baby", v);
-			subCategories.emplace("Young", v1);
-			subCategories.emplace("Adult", v2);
-			subCategories.emplace("Senior", v3);
-		}
-		else if (this->category == "gender") {
-			subCategories.emplace("Male", v);
-			subCategories.emplace("Female", v1);
-		}
-		else if (this->category == "size") {
-			subCategories.emplace("Small", v);
-			subCategories.emplace("Medium", v1);
-			subCategories.emplace("Large", v2);
-			subCategories.emplace("Extra Large", v3);
-		}
-		else if (this->category == "coat") {
-			subCategories.emplace("Short", v);
-			subCategories.emplace("Medium", v1);
-			subCategories.emplace("Long", v2);
-		}
-		else if (this->category == "breed") {
-			set<string>::iterator iter = uniqueBreeds.begin();
-			for (iter; iter != uniqueBreeds.end(); iter++) {
-				vector<Cat*> v4;
-				subCategories.emplace(*iter, v4);
+	}
+	map<string, vector<Cat*>>& getSubCategories() {
+		return subCategories;
+	}
+	void insertCat(string& subCategory, Cat*& cat) {
+		map<string, vector<Cat*>>::iterator iter = subCategories.begin();
+		for (iter; iter != subCategories.end(); iter++) {
+			if (iter->first == subCategory) {
+				iter->second.push_back(cat); 
+				break;
 			}
 		}
-
+		if (iter == subCategories.end()) {
+			vector<Cat*> v = {cat};
+			subCategories.emplace(subCategory, v);
+		}
 	}
-	void insertCat(Cat*& cat) {
-		cats.push_back(cat);
-	}
-	void importBreedList(set<string>& breeds) {
-		this->uniqueBreeds = breeds;
+	void addToBreedList(string breed) {
+		if (subCategories.find(breed) == subCategories.end()) {
+			vector<Cat*> v;
+			subCategories.emplace(breed, v);
+		}
 	}
 };
 
 
 class Graph {
-	map<int, Cat*> cats;
+	//map<int, Cat*> cats;
+	set<string> uniqueBreeds;
 	map<string, Category*> categories;
 	int catCount = 0;
 	int categoryCount = 0;
 
-	void categorizeInsertedCat(Cat*& cat);
 public:
 	Graph() {};
-	void insertCategory(string category, set<string>& uniqueBreeds);
+	void insertCategory(string category);
 	void insertCat(Cat*& cat);
+	void addToBreedList(string& breed);
 };
 
-void Graph::insertCategory(string category, set<string>& uniqueBreeds) {
+void Graph::insertCategory(string category) {
 	categoryCount += 1;
 	Category* categoryObj = new Category();
-	categoryObj->importBreedList(uniqueBreeds);
 	categories.emplace(category, categoryObj);
+}
+void Graph::addToBreedList(string& breed) {
+	this->uniqueBreeds.insert(breed);
 }
 void Graph::insertCat(Cat*& cat) {
 	this->catCount += 1;
-	this->cats.emplace(catCount, cat);
+	addToBreedList(cat->getBreed());
 
-	categorizeInsertedCat(cat);
-}
-void Graph::categorizeInsertedCat(Cat*& cat) {
+	map<string, Category*>::iterator iter = categories.begin();
+	for (iter; iter != categories.end(); iter++) {
+		string subCategory = "";
+		if (iter->first == "age") {
+			subCategory = cat->getAge();
+		}
+		else if (iter->first == "gender") {
+			subCategory = cat->getGender();
+		}
+		else if (iter->first == "size") {
+			subCategory = cat->getSize();
+		}
+		else if (iter->first == "coat") {
+			subCategory = cat->getCoat();
+		}
+		else if (iter->first == "breed") {
+			subCategory = cat->getBreed();
+			iter->second->addToBreedList(cat->getBreed());
+		}
+		iter->second->insertCat(subCategory, cat);
+	}
 
 }

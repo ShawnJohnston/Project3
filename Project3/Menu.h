@@ -20,14 +20,18 @@ class Menu {
 	void saveToFile();
 public:
 	Menu() {
-
 		graph = new Graph();
-		graph->insertCategory("age", uniqueBreeds);
-		graph->insertCategory("gender", uniqueBreeds);
-		graph->insertCategory("size", uniqueBreeds);
-		graph->insertCategory("coat", uniqueBreeds);
-		graph->insertCategory("breed", uniqueBreeds);
-		graph->insertCategory("breed", uniqueBreeds);
+		graph->insertCategory("age");
+		graph->insertCategory("gender");
+		graph->insertCategory("size");
+		graph->insertCategory("coat");
+		graph->insertCategory("breed");
+
+		cout << "Welcome to the Cat Image Link Filter Tool" << endl << endl << 
+			"Loading data... This will take about 30 seconds. Consider taking this time to pet your actual cat." << endl;
+		processFileInput();
+		cout << "Finished!" << endl << endl;
+
 
 
 		mainMenu();
@@ -35,12 +39,6 @@ public:
 };
 
 void Menu::mainMenu() {
-	cout << "Welcome to the Cat Image Link Filter Tool" << endl << endl;
-
-	cout << "Loading data... This will take about 30 seconds. Consider taking this time to pet your actual cat." << endl;
-	processFileInput();
-	cout << "Finished!" << endl << endl;
-
 	string input = "";
 
 	while (input != "1" || input != "2" || input != "3") {
@@ -353,6 +351,7 @@ void Menu::processFileInput() {
 						cleanLink = cleanLink.substr(0, cleanLink.length() - trimLength);
 
 						Cat* cat = new Cat(order, id, age, gender, size, coat, breed, cleanLink);
+						graph->insertCat(cat);
 						collection.push_back(cat);
 					}
 					break;
