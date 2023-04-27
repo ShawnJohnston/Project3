@@ -5,8 +5,7 @@
 #include "Menu.h"
 
 TEST_CASE("Hash Table") {
-	
-	
+
 }
 
 
