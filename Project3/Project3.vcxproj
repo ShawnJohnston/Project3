@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="HashTable.h" />
     <ClCompile Include="Project3.cpp" />
     <ClCompile Include="Test.cpp" />
   </ItemGroup>
@@ -135,6 +136,7 @@
     <None Include="cats.csv" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Cat.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="Menu.h" />
   </ItemGroup>

@@ -410,9 +410,6 @@ void Menu::overwriteGraph() {
 void Menu::search(string& criteria, string& subCriteria) {
 	searchResults = graph->getCategories()[criteria]->getSubCategories()[subCriteria];
 
-	for (size_t i = 0; i < searchResults.size(); i++) {
-		searchResults.at(i)->print();
-	}
 }
 void Menu::saveToFile() {
 
