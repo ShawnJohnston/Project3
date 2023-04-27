@@ -1,13 +1,12 @@
 #pragma once
 
 #include "Graph.h"
-#include <iostream>
 #include <fstream>
 #include <sstream>
 
 class Menu {
 	Graph* graph;
-	string csvLocation = "cats.csv";
+	string csvLocation = "asdf.csv";
 	set<string> uniqueBreeds;
 	vector<Cat*> searchResults;
 
@@ -17,6 +16,7 @@ class Menu {
 	void completionMenu(bool& searching);
 	 
 	void processFileInput();
+	void overwriteGraph();
 	void search(string& critera, string& subriteria);
 	void saveToFile();
 public:
@@ -68,6 +68,7 @@ void Menu::dataMenu() {
 	cout << "Use the default data file or upload your own." << endl << endl;
 
 	string input = "";
+	bool fileWasChanged = false;
 
 	while (input != "1" || input != "2" || input != "3") {
 		cout << "1. Default" << endl <<
@@ -76,13 +77,40 @@ void Menu::dataMenu() {
 
 		cin >> input;
 
-		if (input == "1") {
-			//	Set csvLocation to 'cats.csv' in Resources folder.
+		if (input == "3") {
+			return;
+		}
+		else if (input == "1") {
+			if (csvLocation != "cats.csv") {
+				fileWasChanged = true;
+				csvLocation = "cats.csv";
+			}
+
+			cout << "Loading data... This will take about 30 seconds. Consider taking this time to pet your actual cat." << endl;
+			processFileInput();
+			cout << "Finished!" << endl << endl;
 		}
 		else if (input == "2") {
-			//	Set csvLocation to some other csv file.
+			cout << "Type the name of the data file you'd like to use." << endl <<
+				"You must follow these instructions for the custom file to work properly: " << endl <<
+				"1.	The file must be within the program folder if you just want to type the file. Otherwise you have to use the absolute path." << endl <<
+				"2. You have to include the name of the file as well as the \".csv\" file extension. The default file is 'cats.csv'." << endl <<
+				"3.	The csv file must follow this format for each column: (columns 3 and 4 are junk, whatever you put there is ignored)" << endl <<
+				"	order,id,junk,junk,age,gender,size,coat,breed,hyperlink" << endl <<
+				"4.	Any row can store multiple hyperlinks, however, all hyperlink columns must start with \" 'full': '\" in order for them to be acknowledged as such." << endl <<
+				"	This is a consequence of the original csv file being poorly organized and also including multiple sizes for the same photos." << endl << endl;
+			string newCSV = "";
+			cin >> newCSV;
+			if (csvLocation.substr(csvLocation.length() - 4, csvLocation.length()) != ".csv") {
+				cout << "Your input must end in '.csv'. Upload rejected." << endl << endl;
+			}
+			else {
+				csvLocation = newCSV;
+				fileWasChanged = true;
+			}
 		}
-		else if (input == "3") {
+		if (fileWasChanged) {
+			overwriteGraph();
 			break;
 		}
 	}
@@ -190,18 +218,22 @@ void Menu::searchMenu() {
 			criteria = "coat";
 			while (subInput != "1" || subInput != "2" || subInput != "3") {
 				cout << "How long should the coat length be?" << endl <<
-					"1. Short" << endl <<
-					"2. Medium" << endl <<
-					"3. Long" << endl << endl;
+					"1.	Hairless" << endl <<
+					"2.	Short" << endl <<
+					"3.	Medium" << endl <<
+					"4.	Long" << endl << endl;
 				cin >> subInput;
 				switch (stoi(subInput)) {
 				case 1:
-					subcriteria = "Short";
+					subcriteria = "Hairless";
 					break;
 				case 2:
-					subcriteria = "Medium";
+					subcriteria = "Short";
 					break;
 				case 3:
+					subcriteria = "Medium";
+					break;
+				case 4:
 					subcriteria = "Long";
 					break;
 				default:
@@ -247,12 +279,13 @@ void Menu::searchMenu() {
 			break;
 		}
 	}
-
+	  
 	search(criteria, subcriteria);
 
 	bool searching = true;
+	completionMenu(searching);
 	while (searching) {
-		completionMenu(searching);
+		searchMenu();
 	}
 }
 void Menu::completionMenu(bool& searching) {
@@ -267,15 +300,19 @@ void Menu::completionMenu(bool& searching) {
 		cin >> input;
 
 		if (input == "1") {
+			searchResults.clear();
 			return;
 		}
 		else if (input == "2") {
 			saveToFile();
 
+			searchResults.clear();
 			searching = false;
 			return;
 		}
 		else if (input == "3") {
+
+			searchResults.clear();
 			searching = false;
 			return;
 		}
@@ -284,7 +321,7 @@ void Menu::completionMenu(bool& searching) {
 }
 void Menu::processFileInput() {
 	ifstream file;
-	file.open("cats.csv");
+	file.open(csvLocation);
 
 	string line;
 	string item;
@@ -361,8 +398,21 @@ void Menu::processFileInput() {
 	}
 	file.close();
 }
+void Menu::overwriteGraph() {
+	delete graph;
+	graph = new Graph();
+	uniqueBreeds.clear();
+
+	cout << "Loading data... This will take about 30 seconds. Consider taking this time to pet your actual cat." << endl;
+	processFileInput();
+	cout << "Finished!" << endl << endl;
+}
 void Menu::search(string& criteria, string& subCriteria) {
 	searchResults = graph->getCategories()[criteria]->getSubCategories()[subCriteria];
+
+	for (size_t i = 0; i < searchResults.size(); i++) {
+		searchResults.at(i)->print();
+	}
 }
 void Menu::saveToFile() {
 

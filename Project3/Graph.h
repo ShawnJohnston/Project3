@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 #include <map>
 #include <Set>
@@ -52,6 +53,15 @@ public:
 	string& getBreed() {
 		return this->breed;
 	}
+	void print() {
+		cout << 
+			"Age:	" << this->age << ",	" <<
+			"Gender:	" << this->gender << ",	" <<
+			"Size:	" << this->size << ",	" <<
+			"Coat:	" << this->coat << ",	" <<
+			"Breed:	" << this->breed << ",	" <<
+			"Photo:	" << this->photo << endl;
+	}
 };
 
 class Category {
@@ -96,11 +106,22 @@ class Graph {
 
 public:
 	Graph() {};
+	~Graph();
 	map<string, Category*>& getCategories();
 	void insertCategory(string category);
 	void insertCat(Cat*& cat);
 	void addToBreedList(string& breed);
 };
+Graph::~Graph() {
+	map<string, vector<Cat*>>::iterator iter = categories["breed"]->getSubCategories().begin();
+	for (iter; iter != categories["breed"]->getSubCategories().end(); iter++) {
+		for (int i = 0; i < iter->second.size(); i++) {
+			delete iter->second.at(i);
+		}
+	}
+	
+	categories.clear();
+}
 map<string, Category*>& Graph::getCategories() {
 	return this->categories;
 }
