@@ -1,11 +1,13 @@
 #pragma once
 
-#include "Graph.h"
+#include "Structures.h"
 #include <fstream>
 #include <sstream>
 
 class Menu {
-	Graph* graph;
+	Graph* graph = new Graph();
+	HashTable* table = new HashTable();
+
 	string csvLocation = "asdf.csv";
 	set<string> uniqueBreeds;
 	vector<Cat*> searchResults;
@@ -21,7 +23,6 @@ class Menu {
 	void saveToFile();
 public:
 	Menu() {
-		graph = new Graph();
 		graph->insertCategory("age");
 		graph->insertCategory("gender");
 		graph->insertCategory("size");
@@ -32,8 +33,6 @@ public:
 			"Loading data... This will take about 30 seconds. Consider taking this time to pet your actual cat." << endl;
 		processFileInput();
 		cout << "Finished!" << endl << endl;
-
-
 
 		mainMenu();
 	}
@@ -289,7 +288,8 @@ void Menu::searchMenu() {
 	}
 }
 void Menu::completionMenu(bool& searching) {
-	cout << "Search Complete." << endl << endl;
+	cout << "Search Complete." << endl <<
+		table->getSize() << " photos found." << endl << endl;
 	string input = "";
 
 	while (input != "1" || input != "2" || input != "3") {
@@ -301,18 +301,20 @@ void Menu::completionMenu(bool& searching) {
 
 		if (input == "1") {
 			searchResults.clear();
+			table = new HashTable();
 			return;
 		}
 		else if (input == "2") {
 			saveToFile();
 
 			searchResults.clear();
+			table = new HashTable();
 			searching = false;
 			return;
 		}
 		else if (input == "3") {
-
 			searchResults.clear();
+			table = new HashTable();
 			searching = false;
 			return;
 		}
@@ -410,7 +412,19 @@ void Menu::overwriteGraph() {
 void Menu::search(string& criteria, string& subCriteria) {
 	searchResults = graph->getCategories()[criteria]->getSubCategories()[subCriteria];
 
+	for (size_t i = 0; i < graph->getCategories()[criteria]->getSubCategories()[subCriteria].size(); i++) {
+		
+		Cat* cat = graph->getCategories()[criteria]->getSubCategories()[subCriteria].at(i);
+		table->insert(cat->getId(), cat);
+	}
 }
 void Menu::saveToFile() {
-
+	ofstream file;
+	file.open("links.txt");
+	for (size_t i = 0; i < table->getCapacity(); i++) {
+		if (!table->get()[i].empty()) {
+			//cout << table->get()[i].front()->getPhoto() << endl;
+			file << table->get()[i].front()->getPhoto() << endl;
+		}
+	}
 }

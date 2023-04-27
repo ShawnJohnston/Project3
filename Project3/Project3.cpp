@@ -1,5 +1,5 @@
-//#include "Menu.h"
-//
-//int main() {
-//	Menu menu;
-//}
+#include "Menu.h"
+
+int main() {
+	Menu menu;
+}
