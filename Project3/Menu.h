@@ -13,7 +13,7 @@ class Menu {
 	vector<Cat*> searchResults;
 
 	void mainMenu();
-	void searchMenu();
+	void filterMenu();
 	void dataMenu();
 	void completionMenu(bool& searching, string& category, string& subCategory);
 	 
@@ -51,7 +51,7 @@ void Menu::mainMenu() {
 		cin >> input;
 
 		if (input == "1") {
-			searchMenu();
+			filterMenu();
 		}
 		else if (input == "2") {
 			dataMenu();
@@ -115,7 +115,7 @@ void Menu::dataMenu() {
 		}
 	}
 }
-void Menu::searchMenu() {
+void Menu::filterMenu() {
 	//	Criteria Code
 	// age,gender,size,coat,breed
 	string input = ""; 
@@ -123,7 +123,7 @@ void Menu::searchMenu() {
 
 	bool selecting = false;
 
-	cout << "Select from the following search critera. " << endl <<
+	cout << "Select from the following search criteria. " << endl <<
 		"1. Age Group" << endl <<
 		"2. Gender" << endl <<
 		"3. Size" << endl <<
@@ -215,7 +215,7 @@ void Menu::searchMenu() {
 	bool searching = true;
 	completionMenu(searching, category, subCategory);
 	while (searching) {
-		searchMenu();
+		filterMenu();
 		if (!searching) {
 			return;
 		}
