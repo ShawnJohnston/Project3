@@ -8,19 +8,21 @@ class Menu {
 	Graph* graph = new Graph();
 	HashTable* table = new HashTable();
 
-	string csvLocation = "asdf.csv";
+	string csvLocation = "cats.csv";
 	set<string> uniqueBreeds;
 	vector<Cat*> searchResults;
 
 	void mainMenu();
 	void searchMenu();
 	void dataMenu();
-	void completionMenu(bool& searching);
+	void completionMenu(bool& searching, string& category, string& subCategory);
 	 
 	void processFileInput();
 	void overwriteGraph();
-	void search(string& critera, string& subriteria);
-	void saveToFile();
+	void search(string& critera, string& subCriteria);
+	void searchHelper(string& category, string& subCategory, vector<string> subCategories);
+	void insert(string& item, int order, int id, string age, string gender, string size, string coat, string breed);
+	void saveToFile(pair<string, string> criteria);
 public:
 	Menu() {
 		graph->insertCategory("age");
@@ -30,7 +32,7 @@ public:
 		graph->insertCategory("breed");
 
 		cout << "Welcome to the Cat Image Link Filter Tool" << endl << endl << 
-			"Loading data... This will take about 30 seconds. Consider taking this time to pet your actual cat." << endl;
+			"Loading data... This will take about 1 minute. Consider taking this time to pet your actual cat." << endl;
 		processFileInput();
 		cout << "Finished!" << endl << endl;
 
@@ -60,7 +62,6 @@ void Menu::mainMenu() {
 
 		cout << endl << endl;
 	}
-
 
 }
 void Menu::dataMenu() {
@@ -117,136 +118,70 @@ void Menu::dataMenu() {
 void Menu::searchMenu() {
 	//	Criteria Code
 	// age,gender,size,coat,breed
-	string input = "";
-	string criteria, subcriteria;
+	string input = ""; 
+	string category, subCategory;
 
 	bool selecting = false;
 
-	while (input != "1" || input != "2" || input != "3" || input != "4" || input != "5" || input != "6") {
-		cout << "Select from the following search critera. " << endl <<
-			"1. Age Group" << endl <<
-			"2. Gender" << endl <<
-			"3. Size" << endl <<
-			"4. Coat" << endl <<
-			"5. Breed" << endl << endl;
+	cout << "Select from the following search critera. " << endl <<
+		"1. Age Group" << endl <<
+		"2. Gender" << endl <<
+		"3. Size" << endl <<
+		"4. Coat" << endl <<
+		"5. Breed" << endl << endl;
 
+	while (input != "1" || input != "2" || input != "3" || input != "4" || input != "5") {
 		cin >> input;
 
-		string subInput = "";
 		if (input == "1") {
-			criteria = "age";
-			while (subInput != "1" || subInput != "2" || subInput != "3" || subInput != "4") {
-				cout << "How old should the cats be, generally?" << endl <<
-					"1. Baby" << endl <<
-					"2. Young" << endl <<
-					"3. Adult" << endl <<
-					"4. Senior" << endl << endl;
-				cin >> subInput;
-				switch (stoi(subInput)) {
-				case 1:
-					subcriteria = "Baby";
-					break;
-				case 2:
-					subcriteria = "Young";
-					break;
-				case 3:
-					subcriteria = "Adult";
-					break;
-				case 4:
-					subcriteria = "Senior";
-					break;
-				default:
-					subcriteria = "";
-					break;
-				}
-				if (subcriteria != "") {
-					break;
-				}
-			}
+			category = "age";
+			vector<string> ageCategories = { "Baby", "Young", "Adult", "Senior" };
+			searchHelper(category, subCategory, ageCategories);
+			break;
 		}
 		else if (input == "2") {
-			criteria = "gender";
+			category = "gender";
+			subCategory = "";
+			string subInput = "";
 			while (subInput != "1" || subInput != "2") {
-				cout << "Should the cats be male or female?" << endl <<
+				cout << "Male or Female?" << endl <<
 					"1. Male" << endl <<
 					"2. Female" << endl << endl;
 				cin >> subInput;
-				if (subInput == "1") {
-					subcriteria = "Male";
+				switch (stoi(subInput)) {
+				case 1:
+					subCategory = "Male";
+					break;
+				case 2:
+					subCategory = "Female";
+					break;
+				default:
+					subCategory = "";
+					cout << "Select a valid option." << endl << endl;
+					break;
 				}
-				else if (subInput == "2") {
-					subcriteria = "Female";
-				}
-				if (subcriteria != "") {
+				if (subCategory != "") {
 					break;
 				}
 			}
+			break;
 		}
 		else if (input == "3") {
-			criteria = "size";
-			while (subInput != "1" || subInput != "2" || subInput != "3" || subInput != "4") {
-				cout << "How big should are the cats?" << endl <<
-					"1. Small" << endl <<
-					"2. Medium" << endl <<
-					"3. Large" << endl <<
-					"4. Extra Large" << endl << endl;
-				cin >> subInput;
-				switch (stoi(subInput)) {
-				case 1:
-					subcriteria = "Small";
-					break;
-				case 2:
-					subcriteria = "Medium";
-					break;
-				case 3:
-					subcriteria = "Large";
-					break;
-				case 4:
-					subcriteria = "Extra Large";
-					break;
-				default:
-					subcriteria = "";
-					break;
-				}
-				if (subcriteria != "") {
-					break;
-				}
-			}
+			category = "size";
+			vector<string> sizeCategories = { "Small", "Medium", "Large", "Extra Large" };
+			searchHelper(category, subCategory, sizeCategories);
+			break;
 		}
 		else if (input == "4") {
-			criteria = "coat";
-			while (subInput != "1" || subInput != "2" || subInput != "3") {
-				cout << "How long should the coat length be?" << endl <<
-					"1.	Hairless" << endl <<
-					"2.	Short" << endl <<
-					"3.	Medium" << endl <<
-					"4.	Long" << endl << endl;
-				cin >> subInput;
-				switch (stoi(subInput)) {
-				case 1:
-					subcriteria = "Hairless";
-					break;
-				case 2:
-					subcriteria = "Short";
-					break;
-				case 3:
-					subcriteria = "Medium";
-					break;
-				case 4:
-					subcriteria = "Long";
-					break;
-				default:
-					subcriteria = "";
-					break;
-				}
-				if (subcriteria != "") {
-					break;
-				}
-			}
+			category = "coat";
+			vector<string> coatCategories = { "Hairless", "Short", "Medium", "Long" };
+			searchHelper(category, subCategory, coatCategories);
+			break;
 		}
 		else if (input == "5") {
-			criteria = "breed";
-			while (subInput != "1" || subInput != "2" || subInput != "3") {
+			category = "breed";
+			string subInput = "";
+			while (subInput == "") {
 				cout << "What breed are you looking for?" << endl;
 
 				string breed;
@@ -262,33 +197,34 @@ void Menu::searchMenu() {
 				for (size_t i = 0; i < stoi(subInput) - 1; i++) {
 					iter++;
 				}
-				subcriteria = *iter;
+				subCategory = *iter;
 
-				cout << subcriteria << endl << endl;
-
-				if (subcriteria != "") {
+				if (subCategory != "") {
 					break;
 				}
+				else {
+					cout << "Select a valid option." << endl << endl;
+				}
 			}
-		}
-		cout << endl << endl;
-
-
-		if (subcriteria != "") {
 			break;
 		}
 	}
-	  
-	search(criteria, subcriteria);
+
+	search(category, subCategory);
 
 	bool searching = true;
-	completionMenu(searching);
+	completionMenu(searching, category, subCategory);
 	while (searching) {
 		searchMenu();
+		if (!searching) {
+			return;
+		}
 	}
 }
-void Menu::completionMenu(bool& searching) {
+void Menu::completionMenu(bool& searching, string& category, string& subCategory) {
+	subCategory.at(0) = char(subCategory.at(0) + 32);
 	cout << "Search Complete." << endl <<
+		category << " -> " << subCategory << endl <<
 		table->getSize() << " photos found." << endl << endl;
 	string input = "";
 
@@ -305,7 +241,7 @@ void Menu::completionMenu(bool& searching) {
 			return;
 		}
 		else if (input == "2") {
-			saveToFile();
+			saveToFile(pair<string, string>(category, subCategory));
 
 			searchResults.clear();
 			table = new HashTable();
@@ -327,8 +263,6 @@ void Menu::processFileInput() {
 
 	string line;
 	string item;
-
-	vector<Cat*> collection;
 
 	if (!file.eof()) {
 		while (getline(file, line)) {
@@ -373,23 +307,7 @@ void Menu::processFileInput() {
 					breed = item;
 				default:
 					if (item.substr(0, 7) == " 'full'") {
-
-						int trimLength = 0;
-						for (size_t i = item.length() - 1; i > 0; i--) {
-							char index = item.at(i);
-							if (index < 48 || index > 57) {
-								trimLength++;
-							}
-							else {
-								break;
-							}
-						}
-						string cleanLink = item.substr(10, item.length());
-						cleanLink = cleanLink.substr(0, cleanLink.length() - trimLength);
-
-						Cat* cat = new Cat(order, id, age, gender, size, coat, breed, cleanLink);
-						graph->insertCat(cat);
-						collection.push_back(cat);
+						insert(item, order, id, age, gender, size, coat, breed);
 					}
 					break;
 				}
@@ -418,13 +336,63 @@ void Menu::search(string& criteria, string& subCriteria) {
 		table->insert(cat->getId(), cat);
 	}
 }
-void Menu::saveToFile() {
+void Menu::searchHelper(string& category, string& subCategory, vector<string> subCategories) {
+	string subInput = "";
+	while (subInput != "1" || subInput != "2" || subInput != "3" || subInput != "4") {
+		cout << "How big should are the cats?" << endl <<
+			"1. " << subCategories.at(0) << endl <<
+			"2. " << subCategories.at(1) << endl <<
+			"3. " << subCategories.at(2) << endl <<
+			"4. " << subCategories.at(3) << endl << endl;
+		cin >> subInput;
+		switch (stoi(subInput)) {
+		case 1:
+			subCategory = subCategories.at(0);
+			break;
+		case 2:
+			subCategory = subCategories.at(1);
+			break;
+		case 3:
+			subCategory = subCategories.at(2);
+			break;
+		case 4:
+			subCategory = subCategories.at(3);
+			break;
+		default:
+			subCategory = "";
+			cout << "Select a valid option." << endl << endl;
+			break;
+		}
+		if (subCategory != "") {
+			break;
+		}
+	}
+}
+void Menu::insert(string& item, int order, int id, string age, string gender, string size, string coat, string breed) {
+	int trimLength = 0;
+	for (size_t i = item.length() - 1; i > 0; i--) {
+		char index = item.at(i);
+		if (index < 48 || index > 57) {
+			trimLength++;
+		}
+		else {
+			break;
+		}
+	}
+	string cleanLink = item.substr(10, item.length());
+	cleanLink = cleanLink.substr(0, cleanLink.length() - trimLength);
+	Cat* cat = new Cat(order, id, age, gender, size, coat, breed, cleanLink);
+	graph->insertCat(cat);
+}
+void Menu::saveToFile(pair<string, string> criteria) {
 	ofstream file;
-	file.open("links.txt");
+	string fileName = criteria.first + "_" + criteria.second + ".csv";
+	file.open(fileName);
+	int counter = 0;
 	for (size_t i = 0; i < table->getCapacity(); i++) {
 		if (!table->get()[i].empty()) {
-			//cout << table->get()[i].front()->getPhoto() << endl;
-			file << table->get()[i].front()->getPhoto() << endl;
+			file << counter << "," << table->get()[i].front()->getPhoto() << endl;
+			counter++;
 		}
 	}
 }

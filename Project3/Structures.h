@@ -162,6 +162,7 @@ void Graph::insertCat(Cat*& cat) {
 
 class HashTable {
 	forward_list<Cat*>* table = new forward_list<Cat*>[10000];
+	vector<string> filters;
 	long long size = 0;
 	long long capacity = 10000;
 
@@ -171,6 +172,8 @@ public:
 	forward_list<Cat*>* get();
 	long long getSize();
 	long long getCapacity();
+	vector<string>& getFilterList();
+	void setFilterTag(string& category);
 	void insert(int& key, Cat*& cat);
 	int hashFunction(int& key);
 	void quadraticProbe(int& index, Cat*& cat);
@@ -191,6 +194,12 @@ long long HashTable::getSize() {
 }
 long long HashTable::getCapacity() {
 	return this->capacity;
+}
+vector<string>& HashTable::getFilterList() {
+	return filters;
+}
+void HashTable::setFilterTag(string& category) {
+	filters.push_back(category);
 }
 void HashTable::insert(int& key, Cat*& cat) {
 	int index = hashFunction(key);
